@@ -66,7 +66,6 @@ def download_yahoo_data(ticker, output_filename, data_dir, start_date, end_date)
 
 
 def main():
-    """Main function to set up directories and download data."""
 
     print("=" * 70)
     print("RISK DASHBOARD - DATA LOADER")
