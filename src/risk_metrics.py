@@ -65,15 +65,21 @@ def rolling_volatility(
 
 
 def historical_var(returns: pd.Series, level: float = 0.95) -> float:
-
     if not (0 < level < 1):
         raise ValueError("level must be between 0 and 1.")
     if returns.empty:
         raise ValueError("returns is empty.")
 
     alpha = 1.0 - level
-    q = returns.quantile(alpha)  # typically negative
-    return float(max(0.0, -q))
+
+    try:
+        q = returns.quantile(alpha, method="lower")  # pandas >= 2.0
+    except TypeError:
+        q = returns.quantile(alpha, interpolation="lower")  # pandas < 2.0
+
+    return float(
+        max(0.0, -q)
+    )  # VaR is a positive loss magnitude, so we take -q and max with 0.
 
 
 def parametric_var_gaussian(returns: pd.Series, level: float = 0.95) -> float:

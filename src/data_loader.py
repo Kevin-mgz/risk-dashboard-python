@@ -6,10 +6,16 @@ Date: 2026
 """
 
 import yfinance as yf
-import pandas_datareader as pdr
 from pathlib import Path
 from datetime import datetime
 import warnings
+
+import sys
+from pathlib import Path
+
+# Add the src directory to sys.path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from src.utils import get_assets
 
 # Suppress pandas warnings
 warnings.filterwarnings("ignore")
@@ -90,27 +96,14 @@ def main():
     # YAHOO FINANCE DOWNLOADS
     # ========================================================================
 
+    assets = get_assets()
     yahoo_datasets = [
         {
-            "ticker": "BTC-USD",
-            "filename": "bitcoin_price.csv",
-            "description": "Bitcoin Price",
-        },
-        {
-            "ticker": "USDCHF=X",
-            "filename": "usd_chf.csv",
-            "description": "USD/CHF Exchange Rate",
-        },
-        {
-            "ticker": "EURCHF=X",
-            "filename": "eur_chf.csv",
-            "description": "EUR/CHF Exchange Rate",
-        },
-        {
-            "ticker": "^SSMI",
-            "filename": "swiss_market_index.csv",
-            "description": "Swiss Market Index",
-        },
+            "ticker": a.ticker,
+            "filename": f"{a.key.lower()}.csv",
+            "description": a.label,
+        }
+        for a in assets.values()
     ]
 
     print("\n📈 YAHOO FINANCE DOWNLOADS")
